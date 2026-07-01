@@ -59,7 +59,7 @@ async function register(username, password) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password })
         });
-        
+
         if (response.ok) {
             alert("Registration successful! Please log in.");
             toggleAuthMode(); // Switch back to login
@@ -136,7 +136,7 @@ async function fetchNotes() {
         const response = await fetch(`${API_URL}/notes/`, {
             headers: getAuthHeaders()
         });
-        
+
         if (response.status === 401) {
             // Token expired or invalid
             logout();
@@ -145,7 +145,7 @@ async function fetchNotes() {
 
         const notes = await response.json();
         notesGrid.innerHTML = "";
-        
+
         if (notes.length === 0) {
             notesGrid.innerHTML = `<div class="loading-state">No notes yet. Create your first secure note above!</div>`;
             return;
@@ -187,7 +187,7 @@ async function saveNote(title, content) {
     }
 }
 
-noteForm.addEventListener("submit", function(event) {
+noteForm.addEventListener("submit", function (event) {
     event.preventDefault();
     saveNote(noteTitleInput.value, noteContentInput.value);
 });
