@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Card Generator</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;450;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>FlaskCard</h1>
+            <p>Generate beautiful, premium Developer Profile Cards in seconds.</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Left Side: Form inputs -->
+            <section class="form-section card-box">
+                <h2>Enter Profile Details</h2>
+                <form action="/" method="POST" id="profile-form">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="Your Name" autocomplete="off" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bio">Biography / Description</label>
+                        <textarea id="bio" name="bio" rows="4" placeholder="Tell us about yourself..."
+                            required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image_url">Profile Image URL</label>
+                        <input type="url" id="image_url" name="image_url" placeholder="https://images.unsplash.com/..."
+                            autocomplete="off">
+                        <small class="help-text">Leave blank to use a sleek default avatar.</small>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Generate Profile Card</button>
+                </form>
+            </section>
+
+            <!-- Right Side: Displaying the card dynamically using Jinja2 -->
+            <section class="preview-section">
+                {% if name %}
+                <!-- If the form was submitted (POST), show the generated card -->
+                <div class="card-display card-box highlight-card animate-pop">
+                    <div class="card-badge">PRO</div>
+                    <div class="avatar-wrapper">
+                        <img src="{{ image_url }}" alt="{{ name }}'s avatar" class="profile-avatar"
+                            onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250&h=250'">
+                    </div>
+                    <h3 class="profile-name">{{ name }}</h3>
+                    <p class="profile-title">Developer & Creator</p>
+                    <p class="profile-bio">{{ bio }}</p>
+
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-num">4.9k</span>
+                            <span class="stat-label">Followers</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-num">32</span>
+                            <span class="stat-label">Projects</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-num">95%</span>
+                            <span class="stat-label">Success Rate</span>
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn-action primary">View Profile</button>
+                        <a href="/" class="btn-action secondary">Reset Card</a>
+                    </div>
+                </div>
+                {% else %}
+                <!-- If no card was generated yet (GET), show a premium placeholder -->
+                <div class="card-placeholder card-box">
+                    <div class="placeholder-icon">Card</div>
+                    <h3>Your card will appear here</h3>
+                    <p>Fill out the form on the left and click "Generate Profile Card" to preview your stunning new
+                        layout.</p>
+                </div>
+                {% endif %}
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>
