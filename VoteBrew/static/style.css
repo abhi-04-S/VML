@@ -1,0 +1,197 @@
+/* Base Styles & Custom Variables */
+:root {
+    --primary: #2C1B18;
+    /* Deep coffee bean */
+    --accent: #B07D62;
+    /* Roasted caramel */
+    --accent-hover: #8F5F46;
+    /* Darker caramel */
+    --bg-light: #F9F5F1;
+    /* Creamy oatmeal background */
+    --card-bg: #FFFFFF;
+    /* Clean white for contrast */
+    --text-primary: #1C100E;
+    /* Very dark brown for text */
+    --text-muted: #6B5B55;
+    /* Soft brownish-gray for descriptions */
+    --shadow: 0 8px 30px rgba(44, 27, 24, 0.06);
+    --shadow-hover: 0 16px 40px rgba(44, 27, 24, 0.12);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Header Styling */
+header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+}
+
+header .subtitle {
+    font-size: 1.1rem;
+    color: var(--accent);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Coffee List and Cards */
+.coffee-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.coffee-card {
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    border: 1px solid rgba(176, 125, 98, 0.08);
+}
+
+.coffee-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(176, 125, 98, 0.2);
+}
+
+/* Image styling */
+.coffee-image {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(44, 27, 24, 0.08);
+}
+
+/* Card details */
+.coffee-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.coffee-info h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.coffee-info .description {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    padding-right: 10px;
+}
+
+/* Vote Section */
+.vote-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+}
+
+.vote-count {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--primary);
+    background-color: rgba(176, 125, 98, 0.1);
+    padding: 4px 12px;
+    border-radius: 99px;
+}
+
+/* Button & Micro-animations */
+.vote-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--accent);
+    color: #FFFFFF;
+    font-size: 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(176, 125, 98, 0.3);
+    transition: var(--transition);
+}
+
+.vote-btn:hover {
+    background-color: var(--accent-hover);
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 6px 14px rgba(176, 125, 98, 0.4);
+}
+
+.vote-btn:active {
+    transform: scale(0.95);
+}
+
+/* Responsiveness */
+@media (max-width: 480px) {
+    body {
+        padding: 20px 12px;
+    }
+
+    .coffee-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px;
+        gap: 16px;
+    }
+
+    .coffee-image {
+        width: 100px;
+        height: 100px;
+    }
+
+    .coffee-info .description {
+        padding-right: 0;
+    }
+
+    .vote-section {
+        justify-content: center;
+        gap: 16px;
+        margin-top: 10px;
+    }
+}

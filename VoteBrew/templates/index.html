@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoteBrew - Coffee Rating App</title>
+    <!-- Premium font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>VoteBrew</h1>
+            <p class="subtitle">Rate your favorite coffee</p>
+        </header>
+
+        <main class="coffee-list">
+            {% for coffee in coffees %}
+            <div class="coffee-card" id="coffee-card-{{ coffee.id }}">
+                <img src="{{ coffee.image_url }}" alt="{{ coffee.name }}" class="coffee-image">
+                <div class="coffee-info">
+                    <h2>{{ coffee.name }}</h2>
+                    <p class="description">{{ coffee.description }}</p>
+                    <div class="vote-section">
+                        <span class="vote-count" id="vote-count-{{ coffee.id }}">Votes: {{ coffee.votes }}</span>
+                        <!-- Triggers client-side JS vote handler -->
+                        <button class="vote-btn" onclick="vote({{ coffee.id }})">+</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </main>
+    </div>
+
+    <!-- Link to external JS -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
