@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Vault</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-vault"></i>
+                <h1>Quote<span>Vault</span></h1>
+            </div>
+            <p class="subtitle">Extracting wisdom, one click at a time.</p>
+        </header>
+
+        <!-- Main Display Card -->
+        <main class="quote-display-card">
+            <div class="quote-box">
+                <span class="quote-icon-left"><i class="fa-solid fa-quote-left"></i></span>
+                <p id="quote-text">
+                    {% if history %}
+                    {{ history[0].quote_text }}
+                    {% else %}
+                    The best way to predict the future is to create it.
+                    {% endif %}
+                </p>
+                <p id="quote-author">
+                    {% if history %}
+                    — {{ history[0].author }}
+                    {% else %}
+                    — Peter Drucker
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="button-group">
+                <button id="generate-btn" class="btn btn-primary">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Quote
+                </button>
+                <button id="clear-btn" class="btn btn-danger">
+                    <i class="fa-solid fa-trash-can"></i> Clear History
+                </button>
+            </div>
+        </main>
+
+        <!-- Quote History Section -->
+        <section class="history-section">
+            <h2 class="section-title">
+                <i class="fa-solid fa-clock-rotate-left"></i> Vault History
+            </h2>
+            <div id="history-list" class="history-list">
+                {% if history %}
+                {% for item in history %}
+                <div class="history-item">
+                    <p class="history-text">"{{ item.quote_text }}"</p>
+                    <div class="history-footer">
+                        <span class="history-author">— {{ item.author }}</span>
+                        <span class="history-time">{{ item.timestamp }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div id="empty-state" class="empty-state">
+                    <i class="fa-solid fa-ghost"></i>
+                    <p>No quotes in history yet. Click "Generate" to fetch one!</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+
+    <!-- (AJAX) -->
+    <script>
+        const quoteText = document.getElementById('quote-text');
+        const quoteAuthor = document.getElementById('quote-author');
+        const generateBtn = document.getElementById('generate-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const historyList = document.getElementById('history-list');
+
+        // Fetch new quote on button click
+        generateBtn.addEventListener('click', async () => {
+
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching...';
+            quoteText.style.opacity = 0.3;
+            quoteAuthor.style.opacity = 0.3;
+
+            try {
+                const response = await fetch('/generate');
+                const data = await response.json();
+
+                if (data.success) {
+
+                    quoteText.innerText = data.quote; // Match key returned in app.py ('quote')
+                    quoteAuthor.innerText = `— ${data.author}`;
+
+
+                    const emptyState = document.getElementById('empty-state');
+                    if (emptyState) {
+                        emptyState.remove();
+                    }
+
+                    // Prepend new quote to history list
+                    const newItem = document.createElement('div');
+                    newItem.className = 'history-item new-item';
+                    newItem.innerHTML = `
+                        <p class="history-text">"${data.quote}"</p>
+                        <div class="history-footer">
+                            <span class="history-author">— ${data.author}</span>
+                            <span class="history-time">${data.timestamp}</span>
+                        </div>
+                    `;
+                    historyList.insertBefore(newItem, historyList.firstChild);
+
+
+                    quoteText.style.opacity = 1;
+                    quoteAuthor.style.opacity = 1;
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Failed to connect to backend.');
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generate Quote';
+            }
+        });
+
+        // Wiping database history
+        clearBtn.addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to clear your Quote History?')) return;
+
+            try {
+                const response = await fetch('/clear', { method: 'POST' });
+                const data = await response.json();
+
+                if (data.success) {
+                    // empty list and inject fallback text
+                    historyList.innerHTML = `
+                        <div id="empty-state" class="empty-state">
+                            <i class="fa-solid fa-ghost"></i>
+                            <p>No quotes in history yet. Click "Generate" to fetch one!</p>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Could not clear history.');
+            }
+        });
+    </script>
+</body>
+
+</html>
