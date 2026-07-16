@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Availability Tracker</title>
+    <!-- Include premium Google Custom Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="brand">
+                <span class="pulse-icon"></span>
+                <h1>Availability Tracker</h1>
+            </div>
+            <div class="tabs">
+                <button class="tab-btn">Dashboard</button>
+                <button class="tab-btn active">Team</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="card-panel">
+                <div class="panel-header">
+                    <h2>Team Availability</h2>
+                    <span class="live-indicator">● Active</span>
+                </div>
+
+                <div class="table-container">
+                    <table class="availability-table">
+                        <thead>
+                            <tr>
+                                <th>Team Member</th>
+                                <th>Status</th>
+                                <th class="text-right">Toggle Availability</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for member in members %}
+                            <tr id="row-{{ member.id }}"
+                                class="{{ 'member-available' if member.is_available else 'member-busy' }}">
+                                <td>
+                                    <div class="member-info">
+                                        <div class="avatar-placeholder">
+                                            {{ member.name[0] }}
+                                        </div>
+                                        <div>
+                                            <div class="member-name">{{ member.name }}</div>
+                                            <div class="member-role">{{ member.role }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span id="badge-{{ member.id }}"
+                                        class="status-badge {{ 'available' if member.is_available else 'busy' }}">
+                                        {{ 'AVAILABLE' if member.is_available else 'BUSY' }}
+                                    </span>
+                                </td>
+                                <td class="text-right">
+                                    <label class="switch">
+                                        <input type="checkbox" id="toggle-{{ member.id }}" {% if member.is_available
+                                            %}checked{% endif %} onchange="toggleAvailability('{{ member.id }}')">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
